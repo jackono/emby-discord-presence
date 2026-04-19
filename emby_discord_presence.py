@@ -1,17 +1,36 @@
 #!/usr/bin/env python3
 import json
 import os
+import platform
 import sys
 import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from pathlib import Path
 
 from pypresence import Presence
 
 
-DEFAULT_CONFIG_PATH = os.path.expanduser("~/.config/emby-discord-presence/config.json")
-DEFAULT_AUTH_HEADER = 'MediaBrowser Client="Emby Discord Presence", Device="macOS", DeviceId="emby-discord-presence", Version="1.0.0"'
+def default_config_path() -> str:
+    if os.name == "nt":
+        appdata = os.environ.get("APPDATA")
+        if appdata:
+            return str(Path(appdata) / "emby-discord-presence" / "config.json")
+        return str(Path.home() / "AppData" / "Roaming" / "emby-discord-presence" / "config.json")
+
+    xdg = os.environ.get("XDG_CONFIG_HOME")
+    if xdg:
+        return str(Path(xdg) / "emby-discord-presence" / "config.json")
+    return str(Path.home() / ".config" / "emby-discord-presence" / "config.json")
+
+
+DEFAULT_CONFIG_PATH = default_config_path()
+DEFAULT_AUTH_HEADER = (
+    f'MediaBrowser Client="Emby Discord Presence", '
+    f'Device="{platform.system() or "Unknown"}", '
+    'DeviceId="emby-discord-presence", Version="1.0.0"'
+)
 
 
 class EmbyDiscordPresence:
