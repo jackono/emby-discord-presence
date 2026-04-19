@@ -1,0 +1,12 @@
+[Unit]
+Description=Emby Discord Presence
+After=graphical-session.target
+
+[Service]
+ExecStart=%h/.local/share/emby-discord-presence/.venv/bin/python %h/.local/share/emby-discord-presence/emby_discord_presence.py
+Restart=always
+RestartSec=5
+Environment=EMBY_DISCORD_PRESENCE_CONFIG=%h/.config/emby-discord-presence/config.json
+
+[Install]
+WantedBy=default.target

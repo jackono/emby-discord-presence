@@ -1,5 +1,7 @@
 # emby-discord-presence
 
+![Preview](docs/preview.png)
+
 A small cross-platform bridge that shows your current Emby playback as Discord Rich Presence.
 
 It works especially well with **Infuse**, since Infuse is one of the most reliable Emby clients for exposing clean playback sessions, but it can also work with **Emby Web** and other Emby-connected clients.
@@ -184,8 +186,8 @@ This copies the script into your user directory, installs dependencies, and crea
 
 Manual LaunchAgent flow, if you do not want to use the installer:
 
-1. Create `~/Library/LaunchAgents/com.emby-discord-presence.plist`
-2. Point it to your local Python binary and script path
+1. Copy `examples/com.emby-discord-presence.plist` to `~/Library/LaunchAgents/com.emby-discord-presence.plist`
+2. Replace `YOUR_USER` with your actual username
 3. Load it with:
 
 ```bash
@@ -195,24 +197,7 @@ launchctl kickstart -k gui/$(id -u)/com.emby-discord-presence
 
 ### Linux (systemd user service example)
 
-Create `~/.config/systemd/user/emby-discord-presence.service`:
-
-```ini
-[Unit]
-Description=Emby Discord Presence
-After=graphical-session.target
-
-[Service]
-ExecStart=%h/.local/share/emby-discord-presence/.venv/bin/python %h/.local/share/emby-discord-presence/emby_discord_presence.py
-Restart=always
-RestartSec=5
-Environment=EMBY_DISCORD_PRESENCE_CONFIG=%h/.config/emby-discord-presence/config.json
-
-[Install]
-WantedBy=default.target
-```
-
-Then enable it:
+Copy `examples/emby-discord-presence.service` to `~/.config/systemd/user/emby-discord-presence.service`, then enable it:
 
 ```bash
 systemctl --user daemon-reload
@@ -221,14 +206,7 @@ systemctl --user enable --now emby-discord-presence.service
 
 ### Windows (Startup folder)
 
-Create `start-emby-discord-presence.bat` somewhere safe:
-
-```bat
-@echo off
-%USERPROFILE%\emby-discord-presence\.venv\Scripts\python.exe %USERPROFILE%\emby-discord-presence\emby_discord_presence.py
-```
-
-Then place a shortcut to that batch file in:
+Use `examples/start-emby-discord-presence.bat`, then place a shortcut to that batch file in:
 
 ```text
 %APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup
