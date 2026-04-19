@@ -8,6 +8,7 @@ It was originally built around **Infuse + Emby**, and Infuse is still one of the
 
 ## Features
 
+- Cleaner package structure, so the entry script stays small
 - Shows what you're currently watching on Discord
 - Supports **Emby**, **Jellyfin**, and **Plex**
 - Strong **Infuse** support
@@ -279,6 +280,19 @@ and argument:
 
 ```text
 %USERPROFILE%\emby-discord-presence\emby_discord_presence.py
+```
+
+## Project structure
+
+```text
+emby_discord_presence.py          # thin entry script
+emby_discord_presence/
+  __init__.py
+  app.py                          # app loop
+  config.py                       # config path + loading
+  discord_rpc.py                  # Discord RPC update logic
+  models.py                       # shared playback model
+  providers.py                    # Emby session fetching
 ```
 
 ## Security
