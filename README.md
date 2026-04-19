@@ -71,7 +71,7 @@ It should also work with other clients as long as the selected media server repo
 git clone https://github.com/jackono/media-discord-presence.git
 cd media-discord-presence
 mkdir -p ~/.config/media-discord-presence ~/.local/share/media-discord-presence
-cp media_discord_presence.py ~/.local/share/media-discord-presence/
+cp -R media_discord_presence ~/.local/share/media-discord-presence/
 cp requirements.txt ~/.local/share/media-discord-presence/
 cp config.example.json ~/.config/media-discord-presence/config.json
 python3 -m venv ~/.local/share/media-discord-presence/.venv
@@ -84,7 +84,7 @@ python3 -m venv ~/.local/share/media-discord-presence/.venv
 git clone https://github.com/jackono/media-discord-presence.git
 cd media-discord-presence
 mkdir -p ~/.config/media-discord-presence ~/.local/share/media-discord-presence
-cp media_discord_presence.py ~/.local/share/media-discord-presence/
+cp -R media_discord_presence ~/.local/share/media-discord-presence/
 cp requirements.txt ~/.local/share/media-discord-presence/
 cp config.example.json ~/.config/media-discord-presence/config.json
 python3 -m venv ~/.local/share/media-discord-presence/.venv
@@ -98,9 +98,9 @@ git clone https://github.com/jackono/media-discord-presence.git
 cd media-discord-presence
 New-Item -ItemType Directory -Force "$env:APPDATA\media-discord-presence" | Out-Null
 New-Item -ItemType Directory -Force "$env:USERPROFILE\media-discord-presence" | Out-Null
-Copy-Item .\media_discord_presence.py "$env:USERPROFILE\media-discord-presence\"
 Copy-Item .\requirements.txt "$env:USERPROFILE\media-discord-presence\"
 Copy-Item .\config.example.json "$env:APPDATA\media-discord-presence\config.json"
+Copy-Item .\media_discord_presence -Destination "$env:USERPROFILE\media-discord-presence\media_discord_presence" -Recurse
 python -m venv "$env:USERPROFILE\media-discord-presence\.venv"
 & "$env:USERPROFILE\media-discord-presence\.venv\Scripts\pip.exe" install -r "$env:USERPROFILE\media-discord-presence\requirements.txt"
 ```
@@ -194,13 +194,13 @@ When `provider` is `auto`, the bridge checks configured providers in this order:
 Foreground:
 
 ```bash
-~/.local/share/media-discord-presence/.venv/bin/python ~/.local/share/media-discord-presence/media_discord_presence.py
+cd ~/.local/share/media-discord-presence && ./.venv/bin/python -m media_discord_presence
 ```
 
 Background:
 
 ```bash
-nohup ~/.local/share/media-discord-presence/.venv/bin/python ~/.local/share/media-discord-presence/media_discord_presence.py > ~/.local/share/media-discord-presence/media-discord-presence.log 2>&1 &
+cd ~/.local/share/media-discord-presence && nohup ./.venv/bin/python -m media_discord_presence > media-discord-presence.log 2>&1 &
 ```
 
 ### Windows (PowerShell)
@@ -208,13 +208,15 @@ nohup ~/.local/share/media-discord-presence/.venv/bin/python ~/.local/share/medi
 Foreground:
 
 ```powershell
-& "$env:USERPROFILE\media-discord-presence\.venv\Scripts\python.exe" "$env:USERPROFILE\media-discord-presence\media_discord_presence.py"
+Push-Location "$env:USERPROFILE\media-discord-presence"
+& "$env:USERPROFILE\media-discord-presence\.venv\Scripts\python.exe" -m media_discord_presence
+Pop-Location
 ```
 
 Background:
 
 ```powershell
-Start-Process -FilePath "$env:USERPROFILE\media-discord-presence\.venv\Scripts\python.exe" -ArgumentList "$env:USERPROFILE\media-discord-presence\media_discord_presence.py"
+Start-Process -WorkingDirectory "$env:USERPROFILE\media-discord-presence" -FilePath "$env:USERPROFILE\media-discord-presence\.venv\Scripts\python.exe" -ArgumentList "-m media_discord_presence"
 ```
 
 ## Example output
@@ -283,15 +285,15 @@ If you prefer Task Scheduler instead, create a task that runs at logon with:
 and argument:
 
 ```text
-%USERPROFILE%\media-discord-presence\media_discord_presence.py
+-m media_discord_presence
 ```
 
 ## Project structure
 
 ```text
-media_discord_presence.py          # thin entry script
 media_discord_presence/
   __init__.py
+  __main__.py                     # module entry point
   app.py                          # app loop
   config.py                       # config path + loading
   discord_rpc.py                  # Discord RPC update logic

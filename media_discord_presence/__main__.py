@@ -1,7 +1,6 @@
-#!/usr/bin/env python3
 import os
 
-from media_discord_presence import DEFAULT_CONFIG_PATH, MediaDiscordPresenceApp
+from . import DEFAULT_CONFIG_PATH, MediaDiscordPresenceApp
 
 
 if __name__ == "__main__":

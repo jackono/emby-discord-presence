@@ -9,9 +9,9 @@ LOG_DIR="$HOME/Library/Logs/media-discord-presence"
 PLIST_PATH="$HOME/Library/LaunchAgents/com.media-discord-presence.plist"
 
 mkdir -p "$APP_DIR" "$CONFIG_DIR" "$LOG_DIR" "$HOME/Library/LaunchAgents"
-cp "$BASE_DIR/media_discord_presence.py" "$APP_DIR/media_discord_presence.py"
 cp "$BASE_DIR/requirements.txt" "$APP_DIR/requirements.txt"
-chmod 755 "$APP_DIR/media_discord_presence.py"
+rm -rf "$APP_DIR/media_discord_presence"
+cp -R "$BASE_DIR/media_discord_presence" "$APP_DIR/media_discord_presence"
 
 if [[ ! -f "$CONFIG_DIR/config.json" ]]; then
   cp "$BASE_DIR/config.example.json" "$CONFIG_DIR/config.json"
@@ -32,7 +32,8 @@ cat > "$PLIST_PATH" <<PLIST
   <key>ProgramArguments</key>
   <array>
     <string>$VENV_DIR/bin/python</string>
-    <string>$APP_DIR/media_discord_presence.py</string>
+    <string>-m</string>
+    <string>media_discord_presence</string>
   </array>
   <key>EnvironmentVariables</key>
   <dict>
