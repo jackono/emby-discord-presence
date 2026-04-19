@@ -1,0 +1,12 @@
+[Unit]
+Description=Media Discord Presence
+After=graphical-session.target
+
+[Service]
+ExecStart=%h/.local/share/media-discord-presence/.venv/bin/python %h/.local/share/media-discord-presence/media_discord_presence.py
+Restart=always
+RestartSec=5
+Environment=MEDIA_DISCORD_PRESENCE_CONFIG=%h/.config/media-discord-presence/config.json
+
+[Install]
+WantedBy=default.target

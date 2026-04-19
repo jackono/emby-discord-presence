@@ -7,7 +7,7 @@ from .discord_rpc import DiscordRPC
 from .providers import ProviderFactory
 
 
-class EmbyDiscordPresenceApp:
+class MediaDiscordPresenceApp:
     def __init__(self, config_path: str):
         self.config = load_config(config_path)
         self.poll_interval = int(self.config.get("poll_interval_seconds", 15))

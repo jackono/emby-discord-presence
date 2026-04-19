@@ -8,20 +8,20 @@ def default_config_path() -> str:
     if os.name == "nt":
         appdata = os.environ.get("APPDATA")
         if appdata:
-            return str(Path(appdata) / "emby-discord-presence" / "config.json")
-        return str(Path.home() / "AppData" / "Roaming" / "emby-discord-presence" / "config.json")
+            return str(Path(appdata) / "media-discord-presence" / "config.json")
+        return str(Path.home() / "AppData" / "Roaming" / "media-discord-presence" / "config.json")
 
     xdg = os.environ.get("XDG_CONFIG_HOME")
     if xdg:
-        return str(Path(xdg) / "emby-discord-presence" / "config.json")
-    return str(Path.home() / ".config" / "emby-discord-presence" / "config.json")
+        return str(Path(xdg) / "media-discord-presence" / "config.json")
+    return str(Path.home() / ".config" / "media-discord-presence" / "config.json")
 
 
 DEFAULT_CONFIG_PATH = default_config_path()
 DEFAULT_AUTH_HEADER = (
-    f'MediaBrowser Client="Emby Discord Presence", '
+    f'MediaBrowser Client="Media Discord Presence", '
     f'Device="{platform.system() or "Unknown"}", '
-    'DeviceId="emby-discord-presence", Version="1.0.0"'
+    'DeviceId="media-discord-presence", Version="1.0.0"'
 )
 
 

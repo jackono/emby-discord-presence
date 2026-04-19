@@ -1,10 +1,10 @@
-# emby-discord-presence
+# media-discord-presence
 
 ![Preview](docs/preview.png)
 
 A small cross-platform bridge that shows your current **Emby**, **Jellyfin**, or **Plex** playback as Discord Rich Presence.
 
-It was originally built around **Infuse + Emby**, and Infuse is still one of the best-supported clients here, but the project now also supports **Jellyfin** and **Plex**.
+It works well with **Infuse**, native Plex clients, web clients, and other players that show up properly in your media server's active sessions.
 
 ## Features
 
@@ -44,8 +44,8 @@ It was originally built around **Infuse + Emby**, and Infuse is still one of the
 
 ### Jellyfin
 - Supported through the same session-polling model as Emby
-- Should be the easiest non-Emby path because the API shape is very similar
-- Still worth treating as less battle-tested than the original Emby flow unless more people try it
+- The API shape is very similar to Emby, so support is straightforward
+- Still worth treating as less battle-tested unless more people try it
 
 ### Plex
 - Supported through `/status/sessions`
@@ -68,41 +68,41 @@ It should also work with other clients as long as the selected media server repo
 ### macOS
 
 ```bash
-git clone https://github.com/jackono/emby-discord-presence.git
-cd emby-discord-presence
-mkdir -p ~/.config/emby-discord-presence ~/.local/share/emby-discord-presence
-cp emby_discord_presence.py ~/.local/share/emby-discord-presence/
-cp requirements.txt ~/.local/share/emby-discord-presence/
-cp config.example.json ~/.config/emby-discord-presence/config.json
-python3 -m venv ~/.local/share/emby-discord-presence/.venv
-~/.local/share/emby-discord-presence/.venv/bin/pip install -r ~/.local/share/emby-discord-presence/requirements.txt
+git clone https://github.com/jackono/media-discord-presence.git
+cd media-discord-presence
+mkdir -p ~/.config/media-discord-presence ~/.local/share/media-discord-presence
+cp media_discord_presence.py ~/.local/share/media-discord-presence/
+cp requirements.txt ~/.local/share/media-discord-presence/
+cp config.example.json ~/.config/media-discord-presence/config.json
+python3 -m venv ~/.local/share/media-discord-presence/.venv
+~/.local/share/media-discord-presence/.venv/bin/pip install -r ~/.local/share/media-discord-presence/requirements.txt
 ```
 
 ### Linux
 
 ```bash
-git clone https://github.com/jackono/emby-discord-presence.git
-cd emby-discord-presence
-mkdir -p ~/.config/emby-discord-presence ~/.local/share/emby-discord-presence
-cp emby_discord_presence.py ~/.local/share/emby-discord-presence/
-cp requirements.txt ~/.local/share/emby-discord-presence/
-cp config.example.json ~/.config/emby-discord-presence/config.json
-python3 -m venv ~/.local/share/emby-discord-presence/.venv
-~/.local/share/emby-discord-presence/.venv/bin/pip install -r ~/.local/share/emby-discord-presence/requirements.txt
+git clone https://github.com/jackono/media-discord-presence.git
+cd media-discord-presence
+mkdir -p ~/.config/media-discord-presence ~/.local/share/media-discord-presence
+cp media_discord_presence.py ~/.local/share/media-discord-presence/
+cp requirements.txt ~/.local/share/media-discord-presence/
+cp config.example.json ~/.config/media-discord-presence/config.json
+python3 -m venv ~/.local/share/media-discord-presence/.venv
+~/.local/share/media-discord-presence/.venv/bin/pip install -r ~/.local/share/media-discord-presence/requirements.txt
 ```
 
 ### Windows (PowerShell)
 
 ```powershell
-git clone https://github.com/jackono/emby-discord-presence.git
-cd emby-discord-presence
-New-Item -ItemType Directory -Force "$env:APPDATA\emby-discord-presence" | Out-Null
-New-Item -ItemType Directory -Force "$env:USERPROFILE\emby-discord-presence" | Out-Null
-Copy-Item .\emby_discord_presence.py "$env:USERPROFILE\emby-discord-presence\"
-Copy-Item .\requirements.txt "$env:USERPROFILE\emby-discord-presence\"
-Copy-Item .\config.example.json "$env:APPDATA\emby-discord-presence\config.json"
-python -m venv "$env:USERPROFILE\emby-discord-presence\.venv"
-& "$env:USERPROFILE\emby-discord-presence\.venv\Scripts\pip.exe" install -r "$env:USERPROFILE\emby-discord-presence\requirements.txt"
+git clone https://github.com/jackono/media-discord-presence.git
+cd media-discord-presence
+New-Item -ItemType Directory -Force "$env:APPDATA\media-discord-presence" | Out-Null
+New-Item -ItemType Directory -Force "$env:USERPROFILE\media-discord-presence" | Out-Null
+Copy-Item .\media_discord_presence.py "$env:USERPROFILE\media-discord-presence\"
+Copy-Item .\requirements.txt "$env:USERPROFILE\media-discord-presence\"
+Copy-Item .\config.example.json "$env:APPDATA\media-discord-presence\config.json"
+python -m venv "$env:USERPROFILE\media-discord-presence\.venv"
+& "$env:USERPROFILE\media-discord-presence\.venv\Scripts\pip.exe" install -r "$env:USERPROFILE\media-discord-presence\requirements.txt"
 ```
 
 Then edit your config.
@@ -194,13 +194,13 @@ When `provider` is `auto`, the bridge checks configured providers in this order:
 Foreground:
 
 ```bash
-~/.local/share/emby-discord-presence/.venv/bin/python ~/.local/share/emby-discord-presence/emby_discord_presence.py
+~/.local/share/media-discord-presence/.venv/bin/python ~/.local/share/media-discord-presence/media_discord_presence.py
 ```
 
 Background:
 
 ```bash
-nohup ~/.local/share/emby-discord-presence/.venv/bin/python ~/.local/share/emby-discord-presence/emby_discord_presence.py > ~/.local/share/emby-discord-presence/emby-discord-presence.log 2>&1 &
+nohup ~/.local/share/media-discord-presence/.venv/bin/python ~/.local/share/media-discord-presence/media_discord_presence.py > ~/.local/share/media-discord-presence/media-discord-presence.log 2>&1 &
 ```
 
 ### Windows (PowerShell)
@@ -208,13 +208,13 @@ nohup ~/.local/share/emby-discord-presence/.venv/bin/python ~/.local/share/emby-
 Foreground:
 
 ```powershell
-& "$env:USERPROFILE\emby-discord-presence\.venv\Scripts\python.exe" "$env:USERPROFILE\emby-discord-presence\emby_discord_presence.py"
+& "$env:USERPROFILE\media-discord-presence\.venv\Scripts\python.exe" "$env:USERPROFILE\media-discord-presence\media_discord_presence.py"
 ```
 
 Background:
 
 ```powershell
-Start-Process -FilePath "$env:USERPROFILE\emby-discord-presence\.venv\Scripts\python.exe" -ArgumentList "$env:USERPROFILE\emby-discord-presence\emby_discord_presence.py"
+Start-Process -FilePath "$env:USERPROFILE\media-discord-presence\.venv\Scripts\python.exe" -ArgumentList "$env:USERPROFILE\media-discord-presence\media_discord_presence.py"
 ```
 
 ## Example output
@@ -222,7 +222,7 @@ Start-Process -FilePath "$env:USERPROFILE\emby-discord-presence\.venv\Scripts\py
 Typical Discord card:
 - App name: `Watching` or whatever you name your Discord app
 - Line 1: `Frieren: Beyond Journey's End`
-- Line 2: `iPhone • S01E14 • Privilege of the Young`
+- Line 2: `iPhone • Infuse • S01E14 • Privilege of the Young`
 
 ## Notes
 
@@ -248,27 +248,27 @@ This copies the script into your user directory, installs dependencies, and crea
 
 Manual LaunchAgent flow, if you do not want to use the installer:
 
-1. Copy `examples/com.emby-discord-presence.plist` to `~/Library/LaunchAgents/com.emby-discord-presence.plist`
+1. Copy `examples/com.media-discord-presence.plist` to `~/Library/LaunchAgents/com.media-discord-presence.plist`
 2. Replace `YOUR_USER` with your actual username
 3. Load it with:
 
 ```bash
-launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.emby-discord-presence.plist
-launchctl kickstart -k gui/$(id -u)/com.emby-discord-presence
+launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.media-discord-presence.plist
+launchctl kickstart -k gui/$(id -u)/com.media-discord-presence
 ```
 
 ### Linux (systemd user service example)
 
-Copy `examples/emby-discord-presence.service` to `~/.config/systemd/user/emby-discord-presence.service`, then enable it:
+Copy `examples/media-discord-presence.service` to `~/.config/systemd/user/media-discord-presence.service`, then enable it:
 
 ```bash
 systemctl --user daemon-reload
-systemctl --user enable --now emby-discord-presence.service
+systemctl --user enable --now media-discord-presence.service
 ```
 
 ### Windows (Startup folder)
 
-Use `examples/start-emby-discord-presence.bat`, then place a shortcut to that batch file in:
+Use `examples/start-media-discord-presence.bat`, then place a shortcut to that batch file in:
 
 ```text
 %APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup
@@ -277,26 +277,26 @@ Use `examples/start-emby-discord-presence.bat`, then place a shortcut to that ba
 If you prefer Task Scheduler instead, create a task that runs at logon with:
 
 ```text
-%USERPROFILE%\emby-discord-presence\.venv\Scripts\python.exe
+%USERPROFILE%\media-discord-presence\.venv\Scripts\python.exe
 ```
 
 and argument:
 
 ```text
-%USERPROFILE%\emby-discord-presence\emby_discord_presence.py
+%USERPROFILE%\media-discord-presence\media_discord_presence.py
 ```
 
 ## Project structure
 
 ```text
-emby_discord_presence.py          # thin entry script
-emby_discord_presence/
+media_discord_presence.py          # thin entry script
+media_discord_presence/
   __init__.py
   app.py                          # app loop
   config.py                       # config path + loading
   discord_rpc.py                  # Discord RPC update logic
   models.py                       # shared playback model
-  providers.py                    # Emby session fetching
+  providers.py                    # media server session fetching
 ```
 
 ## Security
