@@ -226,6 +226,10 @@ Typical Discord card:
 - Line 1: `Frieren: Beyond Journey's End`
 - Line 2: `iPhone • Infuse • S01E14 • Privilege of the Young`
 
+## Troubleshooting
+
+- See [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) for LaunchAgent fixes, config-path mismatches, Plex token issues, and Tailscale/Plex discovery notes.
+
 ## Notes
 
 - Discord caches app metadata sometimes. If you rename your Discord app, restart Discord.
