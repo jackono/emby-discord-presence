@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.media-discord-presence</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/Users/YOUR_USER/.local/share/media-discord-presence/.venv/bin/python</string>
+    <string>/Users/YOUR_USER/.local/share/media-discord-presence/media_discord_presence.py</string>
+  </array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>MEDIA_DISCORD_PRESENCE_CONFIG</key>
+    <string>/Users/YOUR_USER/.config/media-discord-presence/config.json</string>
+  </dict>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>/Users/YOUR_USER/Library/Logs/media-discord-presence/stdout.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/YOUR_USER/Library/Logs/media-discord-presence/stderr.log</string>
+  <key>ProcessType</key>
+  <string>Interactive</string>
+  <key>WorkingDirectory</key>
+  <string>/Users/YOUR_USER/.local/share/media-discord-presence</string>
+</dict>
+</plist>
