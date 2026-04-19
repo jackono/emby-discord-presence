@@ -21,10 +21,11 @@ It was originally built around **Infuse + Emby**, and Infuse is still one of the
 
 ## How it works
 
-1. The script connects to your chosen media server
+1. The script connects to your configured media servers
 2. It polls active playback sessions for your configured user
-3. It normalizes the playback metadata into one internal format
-4. It updates Discord Rich Presence through the local Discord desktop app
+3. In `provider: "auto"` mode, it picks whichever server currently has an active playback
+4. It normalizes the playback metadata into one internal format
+5. It updates Discord Rich Presence through the local Discord desktop app
 
 ## Requirements
 
@@ -118,7 +119,7 @@ Example:
 
 ```json
 {
-  "provider": "emby",
+  "provider": "auto",
   "client_filters": [],
   "poll_interval_seconds": 15,
   "discord": {
@@ -149,9 +150,11 @@ Example:
 ### Config fields
 
 #### Top-level
-- `provider`: `emby`, `jellyfin`, or `plex`
+- `provider`: `auto`, `emby`, `jellyfin`, or `plex`
 - `client_filters`: optional list of client-name filters. Use `[]` to allow any supported client for that user
 - `poll_interval_seconds`: how often to check sessions
+
+When `provider` is `auto`, the bridge checks configured providers in this order: `plex`, `jellyfin`, then `emby`, and uses whichever one currently has an active session.
 
 #### Discord
 - `discord.client_id`: your Discord Developer Application ID
@@ -228,6 +231,7 @@ Typical Discord card:
 - The top app title comes from your Discord Developer application name, not from the script.
 - Discord will not fetch poster art directly from Emby/Jellyfin/Plex URLs for RPC. Use uploaded Discord assets instead.
 - Plex support uses XML session parsing instead of the Emby/Jellyfin JSON flow.
+- In `provider: "auto"` mode, keep each provider block filled in if you want that server to be considered during detection.
 - Jellyfin and Plex support are newer than the original Emby path, so feedback is especially useful.
 
 ## Startup

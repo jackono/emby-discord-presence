@@ -1,5 +1,5 @@
 {
-  "provider": "emby",
+  "provider": "auto",
   "client_filters": [],
   "poll_interval_seconds": 15,
   "discord": {

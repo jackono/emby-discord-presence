@@ -13,6 +13,7 @@ class ProviderBase:
         self.app_config = app_config
         self.config = provider_config
         self.client_filters = [x.lower() for x in client_filters]
+        self.provider_name = "unknown"
 
     def get_playbacks(self) -> list[PlaybackState]:
         raise NotImplementedError
@@ -25,9 +26,10 @@ class ProviderBase:
 
 
 class EmbyLikeProvider(ProviderBase):
-    def __init__(self, app_config: dict, provider_config: dict, client_filters: list[str], server_label: str):
+    def __init__(self, app_config: dict, provider_config: dict, client_filters: list[str], server_label: str, provider_name: str):
         super().__init__(app_config, provider_config, client_filters)
         self.server_label = server_label
+        self.provider_name = provider_name
         self.base_url = self.config["url"].rstrip("/")
         self.username = self.config["username"]
         self.password = self.config["password"]
@@ -99,17 +101,18 @@ class EmbyLikeProvider(ProviderBase):
 
 class EmbyProvider(EmbyLikeProvider):
     def __init__(self, app_config: dict, provider_config: dict, client_filters: list[str]):
-        super().__init__(app_config, provider_config, client_filters, server_label="Emby")
+        super().__init__(app_config, provider_config, client_filters, server_label="Emby", provider_name="emby")
 
 
 class JellyfinProvider(EmbyLikeProvider):
     def __init__(self, app_config: dict, provider_config: dict, client_filters: list[str]):
-        super().__init__(app_config, provider_config, client_filters, server_label="Jellyfin")
+        super().__init__(app_config, provider_config, client_filters, server_label="Jellyfin", provider_name="jellyfin")
 
 
 class PlexProvider(ProviderBase):
     def __init__(self, app_config: dict, provider_config: dict, client_filters: list[str]):
         super().__init__(app_config, provider_config, client_filters)
+        self.provider_name = "plex"
         self.base_url = self.config["url"].rstrip("/")
         self.token = self.config["token"]
         self.username = self.config.get("username", "")
@@ -185,8 +188,15 @@ class PlexProvider(ProviderBase):
 
 class ProviderFactory:
     @staticmethod
-    def build(config: dict):
-        provider_name = str(config.get("provider", "emby")).strip().lower()
+    def names(config: dict) -> list[str]:
+        provider_name = str(config.get("provider", "auto")).strip().lower()
+        if provider_name and provider_name != "auto":
+            return [provider_name]
+        order = ["plex", "jellyfin", "emby"]
+        return [name for name in order if config.get(name)]
+
+    @staticmethod
+    def build_named(config: dict, provider_name: str):
         client_filters = [x.lower() for x in config.get("client_filters", [])]
         if provider_name == "emby":
             return EmbyProvider(config, config["emby"], client_filters)
@@ -195,6 +205,17 @@ class ProviderFactory:
         if provider_name == "plex":
             return PlexProvider(config, config["plex"], client_filters)
         raise RuntimeError(f"Unsupported provider: {provider_name}")
+
+    @staticmethod
+    def build_all(config: dict):
+        return [ProviderFactory.build_named(config, name) for name in ProviderFactory.names(config)]
+
+    @staticmethod
+    def build(config: dict):
+        providers = ProviderFactory.build_all(config)
+        if not providers:
+            raise RuntimeError("No media providers configured")
+        return providers[0]
 
 
 def _safe_int(value):
