@@ -29,6 +29,7 @@ class DiscordRPC:
             episode_code = f"S{int(playback.season):02d}E{int(playback.episode):02d}"
 
         device_and_client = _join_unique(playback.device_name, playback.client_name)
+        progress_text = _format_progress(playback.position_seconds, playback.duration_seconds)
 
         if playback.media_type == "Episode" and playback.series:
             details = playback.series
@@ -39,6 +40,9 @@ class DiscordRPC:
         else:
             details = playback.title
             state = device_and_client
+
+        if progress_text:
+            state = _join_unique(state, progress_text)
 
         payload = {
             "details": details[:128],
@@ -106,3 +110,22 @@ def _join_unique(*parts: str) -> str:
         seen.add(key)
         result.append(value)
     return " • ".join(result)
+
+
+def _format_progress(position_seconds: float, duration_seconds: float, width: int = 8) -> str:
+    if duration_seconds <= 0:
+        return ""
+    position = max(0.0, min(position_seconds, duration_seconds))
+    ratio = 0 if duration_seconds <= 0 else position / duration_seconds
+    marker_index = min(width - 1, max(0, round(ratio * (width - 1))))
+    bar = "".join("◉" if i == marker_index else ("━" if i < marker_index else "─") for i in range(width))
+    return f"{bar} {_format_clock(position)} / {_format_clock(duration_seconds)}"
+
+
+def _format_clock(total_seconds: float) -> str:
+    seconds = max(0, int(total_seconds))
+    hours, rem = divmod(seconds, 3600)
+    minutes, secs = divmod(rem, 60)
+    if hours:
+        return f"{hours}:{minutes:02d}:{secs:02d}"
+    return f"{minutes}:{secs:02d}"
