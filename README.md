@@ -39,16 +39,26 @@ Also works with other Emby-connected clients as long as Emby reports them as act
 
 ## Install
 
+Normal install, recommended:
+
 ```bash
+git clone https://github.com/jackono/emby-discord-presence.git
+cd emby-discord-presence
 mkdir -p ~/.config/emby-discord-presence ~/.local/share/emby-discord-presence
 cp emby_discord_presence.py ~/.local/share/emby-discord-presence/
 cp requirements.txt ~/.local/share/emby-discord-presence/
+cp config.example.json ~/.config/emby-discord-presence/config.json
 python3 -m venv ~/.local/share/emby-discord-presence/.venv
 ~/.local/share/emby-discord-presence/.venv/bin/pip install -r ~/.local/share/emby-discord-presence/requirements.txt
-cp config.example.json ~/.config/emby-discord-presence/config.json
 ```
 
 Then edit your config.
+
+### If you use multiple macOS users
+
+You only need the extra copy step if the repo or script lives inside another user's home directory and your current user cannot read it.
+
+In the normal case, install and run this under the **same macOS user that runs Discord**.
 
 ## Config
 
