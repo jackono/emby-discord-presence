@@ -130,14 +130,30 @@ Example:
 
 ### macOS / Linux
 
+Foreground:
+
 ```bash
 ~/.local/share/emby-discord-presence/.venv/bin/python ~/.local/share/emby-discord-presence/emby_discord_presence.py
 ```
 
+Background:
+
+```bash
+nohup ~/.local/share/emby-discord-presence/.venv/bin/python ~/.local/share/emby-discord-presence/emby_discord_presence.py > ~/.local/share/emby-discord-presence/emby-discord-presence.log 2>&1 &
+```
+
 ### Windows (PowerShell)
+
+Foreground:
 
 ```powershell
 & "$env:USERPROFILE\emby-discord-presence\.venv\Scripts\python.exe" "$env:USERPROFILE\emby-discord-presence\emby_discord_presence.py"
+```
+
+Background:
+
+```powershell
+Start-Process -FilePath "$env:USERPROFILE\emby-discord-presence\.venv\Scripts\python.exe" -ArgumentList "$env:USERPROFILE\emby-discord-presence\emby_discord_presence.py"
 ```
 
 ## Example output
@@ -165,6 +181,17 @@ A helper installer is included:
 ```
 
 This copies the script into your user directory, installs dependencies, and creates a LaunchAgent so it can start automatically when you log in.
+
+Manual LaunchAgent flow, if you do not want to use the installer:
+
+1. Create `~/Library/LaunchAgents/com.emby-discord-presence.plist`
+2. Point it to your local Python binary and script path
+3. Load it with:
+
+```bash
+launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.emby-discord-presence.plist
+launchctl kickstart -k gui/$(id -u)/com.emby-discord-presence
+```
 
 ### Linux (systemd user service example)
 
@@ -205,6 +232,18 @@ Then place a shortcut to that batch file in:
 
 ```text
 %APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup
+```
+
+If you prefer Task Scheduler instead, create a task that runs at logon with:
+
+```text
+%USERPROFILE%\emby-discord-presence\.venv\Scripts\python.exe
+```
+
+and argument:
+
+```text
+%USERPROFILE%\emby-discord-presence\emby_discord_presence.py
 ```
 
 ## Security
