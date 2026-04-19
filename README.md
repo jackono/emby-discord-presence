@@ -2,16 +2,17 @@
 
 ![Preview](docs/preview.png)
 
-A small cross-platform bridge that shows your current Emby playback as Discord Rich Presence.
+A small cross-platform bridge that shows your current **Emby**, **Jellyfin**, or **Plex** playback as Discord Rich Presence.
 
-It works especially well with **Infuse**, since Infuse is one of the most reliable Emby clients for exposing clean playback sessions, but it can also work with **Emby Web** and other Emby-connected clients.
+It was originally built around **Infuse + Emby**, and Infuse is still one of the best-supported clients here, but the project now also supports **Jellyfin** and **Plex**.
 
 ## Features
 
 - Shows what you're currently watching on Discord
-- Uses your active **Emby user** only
-- Supports **Infuse**, **Emby Web**, and other Emby-connected clients
-- Shows device name like `iPhone`, `iPad`, `Apple TV`, or browser/device names reported by Emby
+- Supports **Emby**, **Jellyfin**, and **Plex**
+- Strong **Infuse** support
+- Also works with **Emby Web**, **Jellyfin Web**, Plex clients, and other supported clients reported by the media server
+- Shows device names like `iPhone`, `iPad`, `Apple TV`, browser names, and other client/device labels reported by the server
 - Shows elapsed playback time
 - Optional Discord image assets and buttons
 - Runs locally on macOS, Linux, and Windows
@@ -19,9 +20,9 @@ It works especially well with **Infuse**, since Infuse is one of the most reliab
 
 ## How it works
 
-1. The script authenticates to your Emby server
-2. It polls active playback sessions for your user
-3. It picks the current playing item
+1. The script connects to your chosen media server
+2. It polls active playback sessions for your configured user
+3. It normalizes the playback metadata into one internal format
 4. It updates Discord Rich Presence through the local Discord desktop app
 
 ## Requirements
@@ -29,16 +30,36 @@ It works especially well with **Infuse**, since Infuse is one of the most reliab
 - macOS, Linux, or Windows
 - Python 3.10+
 - Discord desktop app installed and running
-- An Emby server you can access locally or remotely
+- An Emby, Jellyfin, or Plex server you can access locally or remotely
 - A Discord Developer application with an **Application ID**
+
+## Provider support
+
+### Emby
+- Fully supported
+- Best-tested path so far
+- Works especially well with **Infuse**
+
+### Jellyfin
+- Supported through the same session-polling model as Emby
+- Should be the easiest non-Emby path because the API shape is very similar
+- Still worth treating as less battle-tested than the original Emby flow unless more people try it
+
+### Plex
+- Supported through `/status/sessions`
+- Uses `X-Plex-Token`
+- Parses Plex XML session data and maps it into the same internal playback model
+- More likely to need edge-case feedback because Plex metadata/session shapes vary more by client
 
 ## Supported clients
 
-Known good:
+Known good / intended support:
 - **Infuse**
 - **Emby Web**
+- **Jellyfin Web**
+- Plex clients that appear in Plex active sessions
 
-Also works with other Emby-connected clients as long as Emby reports them as active playback sessions under your user.
+It should also work with other clients as long as the selected media server reports them properly as active playback sessions for your user.
 
 ## Install
 
@@ -96,37 +117,71 @@ Example:
 
 ```json
 {
-  "emby": {
-    "url": "http://127.0.0.1:8096",
-    "username": "your-emby-username",
-    "password": "your-emby-password"
-  },
+  "provider": "emby",
   "client_filters": [],
   "poll_interval_seconds": 15,
   "discord": {
     "client_id": "YOUR_DISCORD_APP_ID",
     "large_image": "optional_uploaded_asset_key",
     "small_image": "optional_uploaded_asset_key",
-    "small_text": "Watching via Emby",
+    "small_text": "Watching via media server",
     "buttons": []
+  },
+  "emby": {
+    "url": "http://127.0.0.1:8096",
+    "username": "your-emby-username",
+    "password": "your-emby-password"
+  },
+  "jellyfin": {
+    "url": "http://127.0.0.1:8096",
+    "username": "your-jellyfin-username",
+    "password": "your-jellyfin-password"
+  },
+  "plex": {
+    "url": "http://127.0.0.1:32400",
+    "token": "PLEX_TOKEN_HERE",
+    "username": "your-plex-username"
   }
 }
 ```
 
 ### Config fields
 
-- `emby.url`: Emby base URL
-- `emby.username`: Emby username
-- `emby.password`: Emby password
-- `emby.user_id`: optional fixed Emby user id, if omitted the script resolves it after login
-- `emby.authorization_header`: optional override for the Emby auth header
-- `client_filters`: optional list of client-name filters. Use `[]` to allow any Emby client for that user
-- `poll_interval_seconds`: how often to check Emby sessions
+#### Top-level
+- `provider`: `emby`, `jellyfin`, or `plex`
+- `client_filters`: optional list of client-name filters. Use `[]` to allow any supported client for that user
+- `poll_interval_seconds`: how often to check sessions
+
+#### Discord
 - `discord.client_id`: your Discord Developer Application ID
 - `discord.large_image`: optional uploaded Discord asset key
 - `discord.small_image`: optional uploaded Discord asset key
 - `discord.small_text`: optional tooltip for the small image
 - `discord.buttons`: optional Discord buttons, up to 2
+
+#### Emby
+- `emby.url`: Emby base URL
+- `emby.username`: Emby username
+- `emby.password`: Emby password
+- `emby.user_id`: optional fixed Emby user id
+- `emby.authorization_header`: optional auth header override
+
+#### Jellyfin
+- `jellyfin.url`: Jellyfin base URL
+- `jellyfin.username`: Jellyfin username
+- `jellyfin.password`: Jellyfin password
+- `jellyfin.user_id`: optional fixed Jellyfin user id
+- `jellyfin.authorization_header`: optional auth header override
+
+#### Plex
+- `plex.url`: Plex base URL
+- `plex.token`: Plex token
+- `plex.username`: Plex username to match active sessions
+- `plex.user_id`: optional Plex user id if you prefer matching by id
+- `plex.client_identifier`: optional client identifier override
+- `plex.product`: optional product name override for Plex headers
+- `plex.version`: optional version override for Plex headers
+- `plex.device_name`: optional device name override for Plex headers
 
 ## Run
 
@@ -168,9 +223,11 @@ Typical Discord card:
 ## Notes
 
 - Discord caches app metadata sometimes. If you rename your Discord app, restart Discord.
-- Rich Presence must run under the **same macOS user** as the Discord app.
+- Rich Presence must run under the **same logged-in desktop user/session** as Discord.
 - The top app title comes from your Discord Developer application name, not from the script.
-- Discord will not fetch poster art directly from Emby URLs for RPC. Use uploaded Discord assets instead.
+- Discord will not fetch poster art directly from Emby/Jellyfin/Plex URLs for RPC. Use uploaded Discord assets instead.
+- Plex support uses XML session parsing instead of the Emby/Jellyfin JSON flow.
+- Jellyfin and Plex support are newer than the original Emby path, so feedback is especially useful.
 
 ## Startup
 
@@ -228,7 +285,8 @@ and argument:
 
 - Do **not** commit your real `config.json`
 - Use `config.example.json` as the template
-- Create a dedicated Emby user if you want tighter separation
+- Use a dedicated Emby/Jellyfin/Plex user if you want tighter separation
+- Treat Plex tokens like secrets
 
 ## License
 

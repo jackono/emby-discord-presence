@@ -1,16 +1,27 @@
 {
-  "emby": {
-    "url": "http://127.0.0.1:8096",
-    "username": "your-emby-username",
-    "password": "CHANGE_ME"
-  },
+  "provider": "emby",
   "client_filters": [],
   "poll_interval_seconds": 15,
   "discord": {
     "client_id": "YOUR_DISCORD_APP_ID",
     "large_image": "optional_uploaded_asset_key",
     "small_image": "optional_uploaded_asset_key",
-    "small_text": "Watching via Emby",
+    "small_text": "Watching via media server",
     "buttons": []
+  },
+  "emby": {
+    "url": "http://127.0.0.1:8096",
+    "username": "your-emby-username",
+    "password": "CHANGE_ME"
+  },
+  "jellyfin": {
+    "url": "http://127.0.0.1:8096",
+    "username": "your-jellyfin-username",
+    "password": "CHANGE_ME"
+  },
+  "plex": {
+    "url": "http://127.0.0.1:32400",
+    "token": "PLEX_TOKEN_HERE",
+    "username": "your-plex-username"
   }
 }
