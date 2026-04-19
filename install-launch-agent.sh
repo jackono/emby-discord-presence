@@ -11,7 +11,7 @@ PLIST_PATH="$HOME/Library/LaunchAgents/com.media-discord-presence.plist"
 mkdir -p "$APP_DIR" "$CONFIG_DIR" "$LOG_DIR" "$HOME/Library/LaunchAgents"
 cp "$BASE_DIR/requirements.txt" "$APP_DIR/requirements.txt"
 rm -rf "$APP_DIR/media_discord_presence"
-cp -R "$BASE_DIR/media_discord_presence" "$APP_DIR/media_discord_presence"
+cp -R "$BASE_DIR/src/media_discord_presence" "$APP_DIR/media_discord_presence"
 
 if [[ ! -f "$CONFIG_DIR/config.json" ]]; then
   cp "$BASE_DIR/config.example.json" "$CONFIG_DIR/config.json"

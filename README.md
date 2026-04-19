@@ -71,7 +71,7 @@ It should also work with other clients as long as the selected media server repo
 git clone https://github.com/jackono/media-discord-presence.git
 cd media-discord-presence
 mkdir -p ~/.config/media-discord-presence ~/.local/share/media-discord-presence
-cp -R media_discord_presence ~/.local/share/media-discord-presence/
+cp -R src/media_discord_presence ~/.local/share/media-discord-presence/
 cp requirements.txt ~/.local/share/media-discord-presence/
 cp config.example.json ~/.config/media-discord-presence/config.json
 python3 -m venv ~/.local/share/media-discord-presence/.venv
@@ -84,7 +84,7 @@ python3 -m venv ~/.local/share/media-discord-presence/.venv
 git clone https://github.com/jackono/media-discord-presence.git
 cd media-discord-presence
 mkdir -p ~/.config/media-discord-presence ~/.local/share/media-discord-presence
-cp -R media_discord_presence ~/.local/share/media-discord-presence/
+cp -R src/media_discord_presence ~/.local/share/media-discord-presence/
 cp requirements.txt ~/.local/share/media-discord-presence/
 cp config.example.json ~/.config/media-discord-presence/config.json
 python3 -m venv ~/.local/share/media-discord-presence/.venv
@@ -100,7 +100,7 @@ New-Item -ItemType Directory -Force "$env:APPDATA\media-discord-presence" | Out-
 New-Item -ItemType Directory -Force "$env:USERPROFILE\media-discord-presence" | Out-Null
 Copy-Item .\requirements.txt "$env:USERPROFILE\media-discord-presence\"
 Copy-Item .\config.example.json "$env:APPDATA\media-discord-presence\config.json"
-Copy-Item .\media_discord_presence -Destination "$env:USERPROFILE\media-discord-presence\media_discord_presence" -Recurse
+Copy-Item .\src\media_discord_presence -Destination "$env:USERPROFILE\media-discord-presence\media_discord_presence" -Recurse
 python -m venv "$env:USERPROFILE\media-discord-presence\.venv"
 & "$env:USERPROFILE\media-discord-presence\.venv\Scripts\pip.exe" install -r "$env:USERPROFILE\media-discord-presence\requirements.txt"
 ```
@@ -188,6 +188,12 @@ When `provider` is `auto`, the bridge checks configured providers in this order:
 - `plex.device_name`: optional device name override for Plex headers
 
 ## Run
+
+### From the repo directory
+
+```bash
+PYTHONPATH=src ./.venv/bin/python -m media_discord_presence
+```
 
 ### macOS / Linux
 
@@ -295,14 +301,15 @@ and argument:
 ## Project structure
 
 ```text
-media_discord_presence/
-  __init__.py
-  __main__.py                     # module entry point
-  app.py                          # app loop
-  config.py                       # config path + loading
-  discord_rpc.py                  # Discord RPC update logic
-  models.py                       # shared playback model
-  providers.py                    # media server session fetching
+src/
+  media_discord_presence/
+    __init__.py
+    __main__.py                   # module entry point
+    app.py                        # app loop
+    config.py                     # config path + loading
+    discord_rpc.py                # Discord RPC update logic
+    models.py                     # shared playback model
+    providers.py                  # media server session fetching
 ```
 
 ## Security
