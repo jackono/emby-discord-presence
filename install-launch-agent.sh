@@ -4,6 +4,7 @@ set -euo pipefail
 BASE_DIR="${0:A:h}"
 APP_DIR="$HOME/.local/share/media-discord-presence"
 VENV_DIR="$APP_DIR/.venv"
+REPO_VENV_DIR="$BASE_DIR/.venv"
 CONFIG_DIR="$HOME/.config/media-discord-presence"
 LOG_DIR="$HOME/Library/Logs/media-discord-presence"
 PLIST_PATH="$HOME/Library/LaunchAgents/com.media-discord-presence.plist"
@@ -21,6 +22,10 @@ fi
 python3 -m venv "$VENV_DIR"
 "$VENV_DIR/bin/pip" install --upgrade pip >/dev/null
 "$VENV_DIR/bin/pip" install -r "$APP_DIR/requirements.txt"
+
+python3 -m venv "$REPO_VENV_DIR"
+"$REPO_VENV_DIR/bin/pip" install --upgrade pip >/dev/null
+"$REPO_VENV_DIR/bin/pip" install -r "$BASE_DIR/requirements.txt"
 
 cat > "$PLIST_PATH" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
@@ -64,3 +69,4 @@ launchctl kickstart -k gui/$(id -u)/com.media-discord-presence
 echo "Installed launch agent: $PLIST_PATH"
 echo "Config file: $CONFIG_DIR/config.json"
 echo "Logs: $LOG_DIR"
+echo "Repo venv: $REPO_VENV_DIR"

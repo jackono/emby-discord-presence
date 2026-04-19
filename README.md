@@ -191,6 +191,8 @@ When `provider` is `auto`, the bridge checks configured providers in this order:
 
 ### From the repo directory
 
+If you already ran `./install-launch-agent.sh`, the repo-local `.venv` should already exist.
+
 ```bash
 PYTHONPATH=src ./.venv/bin/python -m media_discord_presence
 ```
@@ -256,7 +258,7 @@ A helper installer is included:
 ./install-launch-agent.sh
 ```
 
-This copies the script into your user directory, installs dependencies, and creates a LaunchAgent so it can start automatically when you log in.
+This copies the package into your user directory, installs dependencies, creates a LaunchAgent so it can start automatically when you log in, and also bootstraps a repo-local `.venv` for manual runs from the repo.
 
 Manual LaunchAgent flow, if you do not want to use the installer:
 
