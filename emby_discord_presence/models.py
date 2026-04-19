@@ -15,3 +15,4 @@ class PlaybackState:
     duration_seconds: float
     device_name: str
     client_name: str
+    last_activity: str = ""
