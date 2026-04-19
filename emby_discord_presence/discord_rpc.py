@@ -28,21 +28,22 @@ class DiscordRPC:
         if playback.season is not None and playback.episode is not None:
             episode_code = f"S{int(playback.season):02d}E{int(playback.episode):02d}"
 
+        device_and_client = _join_unique(playback.device_name, playback.client_name)
+
         if playback.media_type == "Episode" and playback.series:
             details = playback.series
-            parts = [p for p in [playback.device_name, episode_code, playback.title] if p]
-            state = " • ".join(parts)
+            state = _join_unique(device_and_client, episode_code, playback.title)
         elif playback.media_type == "Movie":
             details = f"{playback.title}{f' ({playback.year})' if playback.year else ''}"
-            state = playback.device_name
+            state = device_and_client
         else:
             details = playback.title
-            state = playback.device_name
+            state = device_and_client
 
         payload = {
             "details": details[:128],
             "state": state[:128],
-            "large_text": f"Watching from {playback.device_name} ({playback.client_name})"[:128],
+            "large_text": f"Watching from {device_and_client}"[:128],
         }
 
         large_image = self.discord_config.get("large_image")
@@ -90,3 +91,18 @@ class DiscordRPC:
         except Exception:
             pass
         self.rpc = None
+
+
+def _join_unique(*parts: str) -> str:
+    result = []
+    seen = set()
+    for part in parts:
+        value = (part or "").strip()
+        if not value:
+            continue
+        key = value.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        result.append(value)
+    return " • ".join(result)
