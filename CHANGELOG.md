@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.1 - 2026-04-24
+
+- Simplified README installation instructions to the npm-first flow for GitHub and npm.
+
 ## v0.5.0 - 2026-04-24
 
 - Added configurable Discord activity templates for episodes, movies, tracks, and fallback media.

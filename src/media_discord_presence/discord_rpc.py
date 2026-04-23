@@ -31,10 +31,12 @@ class DiscordRPC:
     def build_payload(self, playback: PlaybackState) -> dict:
         verb = "Paused" if playback.paused else "Watching"
         device_and_client = _join_unique(playback.device_name, playback.client_name)
+        device = playback.device_name
+        client = playback.client_name
         templates = self.discord_config.get("templates", {})
 
         if playback.media_type == "Episode" and playback.series:
-            details = self._render_template(templates.get("episode_details", "{title}"), playback)
+            details = self._render_template(templates.get("episode_details", "{show}"), playback)
             state = self._render_template(
                 templates.get("episode_state", "{show} • {se} • {device_client}"),
                 playback,
@@ -65,12 +67,12 @@ class DiscordRPC:
         payload = {
             "details": details[:128],
             "state": state[:128],
-            "large_text": f"{verb} {playback.client_name}"[:128],
+            "large_text": f"{verb} on {device}"[:128],
         }
 
         large_image = playback.artwork_url or self.discord_config.get("large_image")
         small_image = self.discord_config.get("small_image")
-        small_text = self.discord_config.get("small_text") or f"{verb} on {device_and_client}"
+        small_text = f"{client}"
         if large_image:
             payload["large_image"] = large_image
         if small_image:
@@ -229,6 +231,6 @@ def _status_display_type(discord_config: dict, playback: PlaybackState) -> int:
     if configured == "details":
         return 2
 
-    if playback.media_type == "Episode":
-        return 1
+    # if playback.media_type == "Episode":
+    #     return 1
     return 2
