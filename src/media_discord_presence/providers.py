@@ -92,6 +92,10 @@ class EmbyLikeProvider(ProviderBase):
                     duration_seconds=_ticks_to_seconds(item.get("RunTimeTicks")),
                     device_name=device_name,
                     client_name=client_name,
+                    artist=item.get("AlbumArtist") or _first_or_none(item.get("Artists")),
+                    album=item.get("Album"),
+                    genres=_tuple_of_names(item.get("GenreItems")),
+                    tmdb_id=_provider_id(item, "Tmdb"),
                     last_activity=session.get("LastActivityDate") or "",
                 )
             )
@@ -179,6 +183,9 @@ class PlexProvider(ProviderBase):
                     duration_seconds=_millis_to_seconds(item.attrib.get("duration")),
                     device_name=device_name,
                     client_name=client_name,
+                    artist=item.attrib.get("grandparentTitle"),
+                    album=item.attrib.get("parentTitle"),
+                    genres=_tuple_of_genre_tags(item),
                     last_activity=item.attrib.get("updatedAt") or item.attrib.get("addedAt") or "",
                 )
             )
@@ -248,3 +255,43 @@ def _plex_media_type(value: str) -> str:
     if value == "movie":
         return "Movie"
     return value.title()
+
+
+def _tuple_of_names(items) -> tuple[str, ...]:
+    if not items:
+        return ()
+    result = []
+    for item in items:
+        if isinstance(item, dict):
+            name = (item.get("Name") or "").strip()
+            if name:
+                result.append(name)
+    return tuple(result)
+
+
+def _tuple_of_genre_tags(item) -> tuple[str, ...]:
+    result = []
+    for genre in item.findall("Genre"):
+        tag = (genre.attrib.get("tag") or "").strip()
+        if tag:
+            result.append(tag)
+    return tuple(result)
+
+
+def _first_or_none(values) -> str | None:
+    if not values:
+        return None
+    for value in values:
+        text = str(value or "").strip()
+        if text:
+            return text
+    return None
+
+
+def _provider_id(item: dict, provider_name: str) -> str | None:
+    provider_ids = item.get("ProviderIds")
+    if not isinstance(provider_ids, dict):
+        return None
+    value = provider_ids.get(provider_name)
+    text = str(value or "").strip()
+    return text or None

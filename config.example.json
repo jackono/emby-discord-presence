@@ -2,12 +2,32 @@
   "provider": "auto",
   "client_filters": [],
   "poll_interval_seconds": 15,
+  "tmdb": {
+    "api_key": "",
+    "bearer_token": ""
+  },
   "discord": {
     "client_id": "YOUR_DISCORD_APP_ID",
     "large_image": "optional_uploaded_asset_key",
     "small_image": "optional_uploaded_asset_key",
     "small_text": "Watching via media server",
-    "buttons": []
+    "buttons": [],
+    "status_display": "auto",
+    "omdb_api_key": "",
+    "auto_buttons": {
+      "imdb": false,
+      "mal": false
+    },
+    "templates": {
+      "episode_details": "{title}",
+      "episode_state": "{show} • {se} • {device_client}",
+      "movie_details": "{title}{year_suffix}",
+      "movie_state": "{device_client}",
+      "track_details": "{title}",
+      "track_state": "{artist} • {album} • {device_client}",
+      "default_details": "{title}",
+      "default_state": "{device_client}"
+    }
   },
   "emby": {
     "url": "http://127.0.0.1:8096",

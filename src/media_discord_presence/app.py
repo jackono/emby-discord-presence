@@ -2,6 +2,7 @@ import sys
 import time
 import urllib.error
 
+from .artwork import TmdbArtworkResolver
 from .config import load_config
 from .discord_rpc import DiscordRPC
 from .providers import ProviderFactory
@@ -13,6 +14,7 @@ class MediaDiscordPresenceApp:
         self.poll_interval = int(self.config.get("poll_interval_seconds", 15))
         self.provider_name = str(self.config.get("provider", "auto")).strip().lower()
         self.providers = ProviderFactory.build_all(self.config)
+        self.artwork = TmdbArtworkResolver(self.config.get("tmdb", {}))
         self.discord = DiscordRPC(self.config.get("discord", {}))
         self.active_provider_name = None
 
@@ -44,6 +46,7 @@ class MediaDiscordPresenceApp:
             try:
                 playbacks = provider.get_playbacks()
                 if playbacks:
+                    self.artwork.enrich(playbacks)
                     self.active_provider_name = provider.provider_name
                     return playbacks
             except Exception as e:

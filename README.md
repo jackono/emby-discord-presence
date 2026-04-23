@@ -16,6 +16,9 @@ It works well with **Infuse**, native Plex clients, web clients, and other playe
 - Shows device names like `iPhone`, `iPad`, `Apple TV`, browser names, and other client/device labels reported by the server
 - Shows elapsed playback time
 - Optional Discord image assets and buttons
+- Configurable display templates
+- Optional auto-generated IMDb and MyAnimeList buttons
+- Optional TMDB-backed artwork for movies and shows
 - Runs locally on macOS, Linux, and Windows
 - No external server required
 
@@ -64,6 +67,37 @@ Known good / intended support:
 It should also work with other clients as long as the selected media server reports them properly as active playback sessions for your user.
 
 ## Install
+
+### npm (macOS)
+
+You can also package and install it as a local npm CLI:
+
+```bash
+npm pack
+npm install -g ./media-discord-presence-1.0.0.tgz
+```
+
+Then run:
+
+```bash
+media-discord-presence
+```
+
+On first run, the CLI will walk through config setup interactively and write `~/.config/media-discord-presence/config.json`, then install/start the macOS LaunchAgent.
+The setup wizard supports arrow-key selection, masked secret inputs, editing an existing config, and basic provider connection checks before saving.
+
+Useful commands:
+
+```bash
+media-discord-presence setup
+media-discord-presence edit
+media-discord-presence start
+media-discord-presence stop
+media-discord-presence restart
+media-discord-presence status
+media-discord-presence foreground
+media-discord-presence uninstall
+```
 
 ### macOS
 
@@ -122,12 +156,32 @@ Example:
   "provider": "auto",
   "client_filters": [],
   "poll_interval_seconds": 15,
+  "tmdb": {
+    "api_key": "",
+    "bearer_token": ""
+  },
   "discord": {
     "client_id": "YOUR_DISCORD_APP_ID",
     "large_image": "optional_uploaded_asset_key",
     "small_image": "optional_uploaded_asset_key",
     "small_text": "Watching via media server",
-    "buttons": []
+    "buttons": [],
+    "status_display": "auto",
+    "omdb_api_key": "",
+    "auto_buttons": {
+      "imdb": false,
+      "mal": false
+    },
+    "templates": {
+      "episode_details": "{title}",
+      "episode_state": "{show} • {se} • {device_client}",
+      "movie_details": "{title}{year_suffix}",
+      "movie_state": "{device_client}",
+      "track_details": "{title}",
+      "track_state": "{artist} • {album} • {device_client}",
+      "default_details": "{title}",
+      "default_state": "{device_client}"
+    }
   },
   "emby": {
     "url": "http://127.0.0.1:8096",
@@ -154,6 +208,11 @@ Example:
 - `client_filters`: optional list of client-name filters. Use `[]` to allow any supported client for that user
 - `poll_interval_seconds`: how often to check sessions
 
+#### TMDB
+- `tmdb.api_key`: optional TMDB API key for dynamic artwork lookup
+- `tmdb.bearer_token`: optional TMDB read access token; use this instead of `api_key` if you prefer
+- If both are empty, artwork lookup is disabled
+
 When `provider` is `auto`, the bridge checks configured providers in this order: `plex`, `jellyfin`, then `emby`, and uses whichever one currently has an active session.
 
 #### Discord
@@ -162,6 +221,26 @@ When `provider` is `auto`, the bridge checks configured providers in this order:
 - `discord.small_image`: optional uploaded Discord asset key
 - `discord.small_text`: optional tooltip for the small image
 - `discord.buttons`: optional Discord buttons, up to 2
+- `discord.status_display`: optional top status text source: `auto`, `name`, `state`, or `details`
+- `discord.omdb_api_key`: optional OMDb API key used for IMDb button lookup
+- `discord.auto_buttons`: optional auto-link toggles for `imdb` and `mal`
+- `discord.templates`: optional display templates
+
+Template variables:
+- `{title}`: media title
+- `{show}`: TV show name
+- `{season}`: season number
+- `{episode}`: episode number
+- `{se}`: formatted episode code like `S01E02`
+- `{year}`: release year
+- `{year_suffix}`: formatted as ` (2024)` when a year exists
+- `{genres}`: comma-separated genres when available
+- `{artist}`: music artist when available
+- `{album}`: album name when available
+- `{device}`: device name
+- `{client}`: client/app name
+- `{device_client}`: deduplicated `device • client`
+- `{paused}`: `true` or `false`
 
 #### Emby
 - `emby.url`: Emby base URL
@@ -243,7 +322,8 @@ Typical Discord card:
 - Discord caches app metadata sometimes. If you rename your Discord app, restart Discord.
 - Rich Presence must run under the **same logged-in desktop user/session** as Discord.
 - The top app title comes from your Discord Developer application name, not from the script.
-- Discord will not fetch poster art directly from Emby/Jellyfin/Plex URLs for RPC. Use uploaded Discord assets instead.
+- Discord will not fetch poster art directly from Emby/Jellyfin/Plex URLs for RPC. This project can instead use TMDB artwork URLs when `tmdb` is configured, or fall back to uploaded Discord assets.
+- IMDb/MAL buttons are optional metadata lookups. Discord only shows Rich Presence buttons to other people, not to you.
 - Plex support uses XML session parsing instead of the Emby/Jellyfin JSON flow.
 - In `provider: "auto"` mode, keep each provider block filled in if you want that server to be considered during detection.
 - Jellyfin and Plex support are newer than the original Emby path, so feedback is especially useful.
