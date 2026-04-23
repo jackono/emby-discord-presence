@@ -33,6 +33,7 @@ It works well with **Infuse**, native Plex clients, web clients, and other playe
 ## Requirements
 
 - macOS, Linux, or Windows
+- Node.js 18+
 - Python 3.10+
 - Discord desktop app installed and running
 - An Emby, Jellyfin, or Plex server you can access locally or remotely
@@ -68,13 +69,10 @@ It should also work with other clients as long as the selected media server repo
 
 ## Install
 
-### npm CLI
-
-You can also package and install it as a local npm CLI:
+Install from npm:
 
 ```bash
-npm pack
-npm install -g ./media-discord-presence-0.5.0.tgz
+npm install -g media-discord-presence
 ```
 
 Then run:
@@ -101,54 +99,6 @@ media-discord-presence status
 media-discord-presence foreground
 media-discord-presence uninstall
 ```
-
-### macOS
-
-```bash
-git clone https://github.com/jackono/media-discord-presence.git
-cd media-discord-presence
-mkdir -p ~/.config/media-discord-presence ~/.local/share/media-discord-presence
-cp -R src/media_discord_presence ~/.local/share/media-discord-presence/
-cp requirements.txt ~/.local/share/media-discord-presence/
-cp config.example.json ~/.config/media-discord-presence/config.json
-python3 -m venv ~/.local/share/media-discord-presence/.venv
-~/.local/share/media-discord-presence/.venv/bin/pip install -r ~/.local/share/media-discord-presence/requirements.txt
-```
-
-### Linux
-
-```bash
-git clone https://github.com/jackono/media-discord-presence.git
-cd media-discord-presence
-mkdir -p ~/.config/media-discord-presence ~/.local/share/media-discord-presence
-cp -R src/media_discord_presence ~/.local/share/media-discord-presence/
-cp requirements.txt ~/.local/share/media-discord-presence/
-cp config.example.json ~/.config/media-discord-presence/config.json
-python3 -m venv ~/.local/share/media-discord-presence/.venv
-~/.local/share/media-discord-presence/.venv/bin/pip install -r ~/.local/share/media-discord-presence/requirements.txt
-```
-
-### Windows (PowerShell)
-
-```powershell
-git clone https://github.com/jackono/media-discord-presence.git
-cd media-discord-presence
-New-Item -ItemType Directory -Force "$env:APPDATA\media-discord-presence" | Out-Null
-New-Item -ItemType Directory -Force "$env:USERPROFILE\media-discord-presence" | Out-Null
-Copy-Item .\requirements.txt "$env:USERPROFILE\media-discord-presence\"
-Copy-Item .\config.example.json "$env:APPDATA\media-discord-presence\config.json"
-Copy-Item .\src\media_discord_presence -Destination "$env:USERPROFILE\media-discord-presence\media_discord_presence" -Recurse
-python -m venv "$env:USERPROFILE\media-discord-presence\.venv"
-& "$env:USERPROFILE\media-discord-presence\.venv\Scripts\pip.exe" install -r "$env:USERPROFILE\media-discord-presence\requirements.txt"
-```
-
-Then edit your config.
-
-### If you use multiple macOS users
-
-You only need the extra copy step if the repo or script lives inside another user's home directory and your current user cannot read it.
-
-In the normal case, install and run this under the **same macOS user that runs Discord**.
 
 ## Config
 
