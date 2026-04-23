@@ -15,4 +15,11 @@ class PlaybackState:
     duration_seconds: float
     device_name: str
     client_name: str
+    artist: str | None = None
+    album: str | None = None
+    genres: tuple[str, ...] = ()
+    artwork_url: str | None = None
+    tmdb_id: str | None = None
+    imdb_url: str | None = None
+    mal_url: str | None = None
     last_activity: str = ""

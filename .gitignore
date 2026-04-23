@@ -4,3 +4,5 @@ __pycache__/
 config.json
 *.log
 .DS_Store
+node_modules/
+media-discord-presence-*.tgz

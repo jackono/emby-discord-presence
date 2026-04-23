@@ -1,0 +1,24 @@
+{
+  "name": "media-discord-presence",
+  "version": "1.0.0",
+  "description": "Discord Rich Presence bridge for Plex, Jellyfin, and Emby",
+  "license": "MIT",
+  "bin": {
+    "media-discord-presence": "bin/media-discord-presence.js"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "src/media_discord_presence/*.py",
+    "config.example.json",
+    "requirements.txt",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "enquirer": "^2.4.1"
+  }
+}
