@@ -68,13 +68,13 @@ It should also work with other clients as long as the selected media server repo
 
 ## Install
 
-### npm (macOS)
+### npm CLI
 
 You can also package and install it as a local npm CLI:
 
 ```bash
 npm pack
-npm install -g ./media-discord-presence-1.0.0.tgz
+npm install -g ./media-discord-presence-0.5.0.tgz
 ```
 
 Then run:
@@ -83,7 +83,10 @@ Then run:
 media-discord-presence
 ```
 
-On first run, the CLI will walk through config setup interactively and write `~/.config/media-discord-presence/config.json`, then install/start the macOS LaunchAgent.
+On first run, the CLI will walk through config setup interactively and write the runtime config, then install/start the background service for your OS:
+- macOS: `launchd`
+- Linux: `systemd --user` when available, otherwise a detached background process
+- Windows: Startup script plus detached background process
 The setup wizard supports arrow-key selection, masked secret inputs, editing an existing config, and basic provider connection checks before saving.
 
 Useful commands:

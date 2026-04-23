@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.0.0 - 2026-04-24
+## v0.5.0 - 2026-04-24
 
 - Added configurable Discord activity templates for episodes, movies, tracks, and fallback media.
 - Added dynamic TMDB artwork support and OMDb/Jikan link enrichment for richer Rich Presence cards.
